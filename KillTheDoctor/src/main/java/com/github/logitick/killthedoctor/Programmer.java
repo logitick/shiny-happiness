@@ -25,7 +25,7 @@ public class Programmer {
     try {
       br = new BufferedReader(new FileReader(file));
       while (br.ready()) {
-        builder.append(br.readLine()).append("\n");
+        builder.append(br.readLine().trim()).append("\n");
 
       }
     } catch (FileNotFoundException e) {
@@ -45,12 +45,26 @@ public class Programmer {
     ArrayList<File> files = new ArrayList<File>();
     this.traverseProject(this.project.getPath().toFile(), files);
     String fileContents;
+    int newLineCount = 0;
     for (File file : files) {
       fileContents = parseFile(file);
       for (char c: fileContents.toCharArray()) {
         type(c);
+        if (c == '\n') {
+          newLineCount++;
+        }
+        int nextSleep = 0;
         try {
-          Thread.sleep(200);
+          nextSleep = (int)(Math.random() * 1000);
+          while (nextSleep == 0 || nextSleep > 120) {
+            nextSleep = (int)(Math.random() * 1000);
+          }
+
+          if (newLineCount % 12 == 0) {
+              scroll();
+          }
+
+          Thread.sleep(nextSleep);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -186,6 +200,25 @@ public class Programmer {
 
   private void doType(int... keyCodes) {
     doType(keyCodes, 0, keyCodes.length);
+  }
+
+  private void switchApplication() {
+    doType(VK_ALT, VK_TAB);
+    // do mouse move here
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    doType(VK_ALT, VK_TAB);
+  }
+
+  public void createNewFile() {
+    doType(VK_CONTROL, VK_N);
+  }
+
+  public void scroll() {
+    robot.mouseWheel(3);
   }
 
   private void doType(int[] keyCodes, int offset, int length) {

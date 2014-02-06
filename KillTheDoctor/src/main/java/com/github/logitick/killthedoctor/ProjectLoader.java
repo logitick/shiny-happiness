@@ -11,8 +11,8 @@ public class ProjectLoader {
   private Path projectPath;
   private ProjectType type;
 
-  public static final int ALL = 00;
-  public static final int PROJECT_FILES = 01;
+  public static final int ALL = 000;
+  public static final int PROJECT_FILES = 001;
 
   private ProjectLoader(Path path, ProjectType type) {
     this.setPath(path);
