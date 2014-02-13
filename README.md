@@ -9,10 +9,7 @@ Since Timedoctor seems to think that slamming keys on your keyboard is being pro
 
 ##Usage
 1.   Tell time doctor you're working
-2.   
-```
-java Main -path "path/to/project/root" -type "java|php|cs"
-```
+2.   ```java Main -path "path/to/project/root" -type "java|php|cs"```
 3. 	 Quickly alt+tab to your text editor
 4. 	 Do your actual work on your other computer.
 
