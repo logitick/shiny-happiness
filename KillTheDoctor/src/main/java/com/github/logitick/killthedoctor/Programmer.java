@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import static java.awt.event.KeyEvent.*;
 
 /**
- * Created by Knif3r on 1/27/14.
+ * Created by Paul Daniel Iway on 1/27/14.
  */
 public class Programmer {
   private Robot robot;
-  private ProjectLoader project;
+  private Project project;
 
-  public Programmer(ProjectLoader project) throws AWTException{
+  public Programmer(Project project) throws AWTException{
     this.robot = new Robot();
     this.project = project;
   }
@@ -46,6 +46,7 @@ public class Programmer {
     this.traverseProject(this.project.getPath().toFile(), files);
     String fileContents;
     int newLineCount = 0;
+    int nextSleep = 0;
     for (File file : files) {
       fileContents = parseFile(file);
       for (char c: fileContents.toCharArray()) {
@@ -53,7 +54,7 @@ public class Programmer {
         if (c == '\n') {
           newLineCount++;
         }
-        int nextSleep = 0;
+
         try {
           nextSleep = (int)(Math.random() * 1000);
           while (nextSleep == 0 || nextSleep > 120) {
@@ -85,6 +86,7 @@ public class Programmer {
     }
     return out;
   }
+
   public void type(CharSequence characters) {
     int length = characters.length();
     for (int i = 0; i < length; i++) {

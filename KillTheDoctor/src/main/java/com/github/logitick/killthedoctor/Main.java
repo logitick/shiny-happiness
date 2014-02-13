@@ -1,4 +1,8 @@
 package com.github.logitick.killthedoctor;
+
+import com.github.logitick.killthedoctor.project.ProjectType;
+import com.github.logitick.killthedoctor.project.ProjectTypeFactory;
+
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Paths;
@@ -9,7 +13,8 @@ public class Main {
      */
     public static void main(String[] args) {
       String path = "";
-      String type = "java";
+      String strType = "";
+      int type = ProjectTypeFactory.JAVA;
 
       for (int i = 0; i < args.length; i++) {
         if (args[i].startsWith("-")) {
@@ -17,7 +22,7 @@ public class Main {
             path = args[++i];
           }
           if (args[i].equals("-type")) {
-            type = args[++i].toLowerCase();
+            strType = args[++i].toLowerCase();
           }
         }
       }
@@ -26,18 +31,19 @@ public class Main {
 
         File file = Paths.get(path).toFile();
         System.out.println(file.getAbsolutePath());
-        int projectType = ProjectType.DEFAULT;
+        ProjectType projectType = null;
 
-        if (type.equals("java")) {
-          projectType = ProjectType.JAVA;
+        if (strType.equals("java")) {
+          type = ProjectTypeFactory.JAVA;
         }
-        if (type.equals("php")) {
-          projectType = ProjectType.PHP;
+        if (strType.equals("php")) {
+          type = ProjectTypeFactory.PHP;
         }
-        if (type.equals("csharp")) {
-          projectType = ProjectType.C_SHARP;
+        if (strType.equals("csharp")) {
+          type = ProjectTypeFactory.C_SHARP;
         }
-        ProjectLoader project = ProjectLoader.load(Paths.get(path), new ProjectType(projectType));
+
+        Project project = Project.load(Paths.get(path), new ProjectTypeFactory().createProjectType(type));
 
         Programmer pr = new Programmer(project);
 

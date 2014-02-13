@@ -1,25 +1,27 @@
 package com.github.logitick.killthedoctor;
 
+import com.github.logitick.killthedoctor.project.ProjectType;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Created by Knif3r on 1/25/14.
+ * Created by Paul Daniel Iway on 1/25/14.
  */
-public class ProjectLoader {
+public class Project {
   private Path projectPath;
   private ProjectType type;
 
   public static final int ALL = 000;
   public static final int PROJECT_FILES = 001;
 
-  private ProjectLoader(Path path, ProjectType type) {
+  private Project(Path path, ProjectType type) {
     this.setPath(path);
     this.setType(type);
   }
 
-  private ProjectLoader() {
+  private Project() {
 
   }
 
@@ -42,35 +44,42 @@ public class ProjectLoader {
     this.type = type;
   }
 
-  public static ProjectLoader load(String path) {
-    ProjectLoader loader = new ProjectLoader();
+  public static Project
+  load(String path) {
+    Project loader = new Project();
     loader.setPath(path);
     return loader;
   }
 
-  public static ProjectLoader load(Path path, ProjectType type) {
-    return new ProjectLoader(path, type);
+  public static Project load(Path path, ProjectType type) {
+    return new Project(path, type);
   }
 
   public File[] getFiles() {
-    return getFiles(ProjectLoader.ALL);
+    return getFiles(Project.ALL);
   }
 
 
 
   public File[] getFiles(int fetchOptions) {
+    return getFiles(this.projectPath.toFile(), fetchOptions);
+  }
+
+  private File[] getFiles(File current, int fetchOptions) {
     File[] files = null;
-
     switch (fetchOptions) {
-      case ProjectLoader.ALL:
-        files = this.projectPath.toFile().listFiles();
+      case Project.PROJECT_FILES:
+        files = current.listFiles(type.getFileFilter());
         break;
-      case ProjectLoader.PROJECT_FILES:
-
-        files = this.projectPath.toFile().listFiles(type.getFileFilter());
-
-        break;
+      default:
+        files = current.listFiles();
     }
+    for (File file : files) {
+      if (file.isDirectory()) {
+        System.arraycopy(this.getFiles(file, fetchOptions), 0, files, 0, files.length);
+      }
+    }
+
     return files;
   }
 }
